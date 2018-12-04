@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         var url = ""
 
         fun randomPoem(){
-            var randId = (1..18).shuffled().last()
+            var randId = (1..50).shuffled().last()
             url = randId.toString()
 
             val call = api.getPoems(url)

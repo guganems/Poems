@@ -52,7 +52,7 @@
         </LinearLayout>
     </ScrollView>
     <Button
-            android:text="ლექსო, ამოგთქომ, ოხერო.."
+            android:text="ნეხტ"
             android:layout_width="match_parent"
             android:layout_height="71dp"
             android:id="@+id/randombtn" app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
