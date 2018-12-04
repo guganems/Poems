@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.needletipson.guga.poems.api.Api
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.     synthetic.main.activity_main.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         val random: Random
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://poemsapi.ga/public/api/poem/")
+            .baseUrl("http://poemsapi.ga/public/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         fun randomPoem(){
             var randId = (1..50).shuffled().last()
-            url = randId.toString()
+            url = "poem/" + randId.toString()
 
             val call = api.getPoems(url)
 
