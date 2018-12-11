@@ -2,6 +2,7 @@ package com.needletipson.guga.poems
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.needletipson.guga.poems.api.Api
 import kotlinx.android.     synthetic.main.activity_main.*
@@ -10,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.Console
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +30,33 @@ class MainActivity : AppCompatActivity() {
         val api: Api = retrofit.create(Api::class.java)
 
         var url = ""
+
+        fun getCount(){
+            url = "poems";
+
+            val call = api.getPoemsCount(url);
+
+            call.enqueue(object : Callback<List<Count>> {
+                override fun onResponse(call: Call<List<Count>>, response: Response<List<Count>>) {
+                    val poemsCount = response.body()
+
+                    val count = arrayOfNulls<String>(poemsCount!!.size)
+
+                    for (i in poemsCount.indices) {
+                        count[i] = poemsCount[i].count.toString()
+                    }
+
+                    Log.d("TAG", count[0])
+                }
+
+                override fun onFailure(call: Call<List<Count>>, t: Throwable) {
+                    Toast.makeText(
+                        applicationContext, t.message, Toast
+                            .LENGTH_SHORT
+                    ).show()
+                }
+            })
+        }
 
         fun randomPoem(){
             var randId = (1..50).shuffled().last()
@@ -62,11 +91,13 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+        getCount()
 
         randomPoem()
 
         randombtn.setOnClickListener {
             randomPoem()
+            getCount()
         }
     }
 }
