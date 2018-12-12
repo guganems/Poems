@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.needletipson.guga.poems.api.Api
+import com.needletipson.guga.poems.appConstants.AppConstants
 import kotlinx.android.     synthetic.main.activity_main.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onFailure(call: Call<List<Count>>, t: Throwable) {
                     Toast.makeText(
-                        applicationContext, t.message, Toast
+                        applicationContext, AppConstants().CONNECTION_ERROR, Toast
                             .LENGTH_SHORT
                     ).show()
                 }
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
                         override fun onFailure(call: Call<List<Poems>>, t: Throwable) {
                             Toast.makeText(
-                                applicationContext, t.message, Toast
+                                applicationContext, AppConstants().CONNECTION_ERROR, Toast
                                     .LENGTH_SHORT
                             ).show()
                         }
