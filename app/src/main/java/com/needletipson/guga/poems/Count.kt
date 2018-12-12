@@ -1,5 +1,5 @@
 package com.needletipson.guga.poems
 
-class Count(var count: Int) {
+class Count(var id: Int, var count: Int) {
 
 }

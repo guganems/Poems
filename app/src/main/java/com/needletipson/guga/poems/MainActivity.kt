@@ -2,7 +2,6 @@ package com.needletipson.guga.poems
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import com.needletipson.guga.poems.api.Api
 import kotlinx.android.     synthetic.main.activity_main.*
@@ -11,16 +10,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.io.Console
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        val random: Random
 
         val retrofit = Retrofit.Builder()
             .baseUrl("http://poemsapi.ga/public/api/")
@@ -29,12 +24,14 @@ class MainActivity : AppCompatActivity() {
 
         val api: Api = retrofit.create(Api::class.java)
 
-        var url = ""
+        var url: String
 
         fun getCount(){
-            url = "poems";
+            url = "poems"
 
-            val call = api.getPoemsCount(url);
+            var poemsCountFromAPI: Int
+
+            val call = api.getPoemsCount(url)
 
             call.enqueue(object : Callback<List<Count>> {
                 override fun onResponse(call: Call<List<Count>>, response: Response<List<Count>>) {
@@ -46,7 +43,8 @@ class MainActivity : AppCompatActivity() {
                         count[i] = poemsCount[i].count.toString()
                     }
 
-                    Log.d("TAG", count[0])
+                    poemsCountFromAPI = count[0]!!.toInt()
+                    randomPoem(poemsCountFromAPI)
                 }
 
                 override fun onFailure(call: Call<List<Count>>, t: Throwable) {
@@ -55,48 +53,47 @@ class MainActivity : AppCompatActivity() {
                             .LENGTH_SHORT
                     ).show()
                 }
+
+                fun randomPoem(count: Int){
+                    val randId = (1..count).shuffled().last()
+                    url = "poem/" + randId.toString()
+
+                    val callPoems = api.getPoems(url)
+
+                    callPoems.enqueue(object : Callback<List<Poems>> {
+                        override fun onResponse(call: Call<List<Poems>>, response: Response<List<Poems>>) {
+                            val poems = response.body()
+
+                            val poemTitle = arrayOfNulls<String>(poems!!.size)
+                            val poemAuthor = arrayOfNulls<String>(poems.size)
+                            val poemContent = arrayOfNulls<String>(poems.size)
+
+                            for (i in poems.indices) {
+                                poemTitle[i] = poems[i].title
+                                poemAuthor[i] = poems[i].author
+                                poemContent[i] = poems[i].content
+                            }
+
+                            titleTxt.text = poemTitle[0]
+                            author.text = poemAuthor[0]
+                            poemContentTxt.text = poemContent[0]
+                        }
+
+                        override fun onFailure(call: Call<List<Poems>>, t: Throwable) {
+                            Toast.makeText(
+                                applicationContext, t.message, Toast
+                                    .LENGTH_SHORT
+                            ).show()
+                        }
+                    })
+                }
             })
         }
 
-        fun randomPoem(){
-            var randId = (1..50).shuffled().last()
-            url = "poem/" + randId.toString()
 
-            val call = api.getPoems(url)
-
-            call.enqueue(object : Callback<List<Poems>> {
-                override fun onResponse(call: Call<List<Poems>>, response: Response<List<Poems>>) {
-                    val poems = response.body()
-
-                    val poemTitle = arrayOfNulls<String>(poems!!.size)
-                    val poemAuthor = arrayOfNulls<String>(poems.size)
-                    val poemContent = arrayOfNulls<String>(poems.size)
-
-                    for (i in poems.indices) {
-                        poemTitle[i] = poems[i].title
-                        poemAuthor[i] = poems[i].author
-                        poemContent[i] = poems[i].content
-                    }
-
-                    titleTxt.text = poemTitle[0]
-                    author.text = poemAuthor[0]
-                    poemContentTxt.text = poemContent[0]
-                }
-
-                override fun onFailure(call: Call<List<Poems>>, t: Throwable) {
-                    Toast.makeText(
-                        applicationContext, t.message, Toast
-                            .LENGTH_SHORT
-                    ).show()
-                }
-            })
-        }
         getCount()
 
-        randomPoem()
-
         randombtn.setOnClickListener {
-            randomPoem()
             getCount()
         }
     }

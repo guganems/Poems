@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Poems</string>
+    <string name="loading">იტვირთება</string>
+    <string name="buttonText">შემდეგი</string>
 </resources>
