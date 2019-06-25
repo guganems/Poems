@@ -22,9 +22,7 @@ class MainActivity : AppCompatActivity() {
             .baseUrl("http://poemsapi.ga/public/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-
         val api: Api = retrofit.create(Api::class.java)
-
         var url: String
 
         fun getCount(){
@@ -37,9 +35,7 @@ class MainActivity : AppCompatActivity() {
             call.enqueue(object : Callback<List<Count>> {
                 override fun onResponse(call: Call<List<Count>>, response: Response<List<Count>>) {
                     val poemsCount = response.body()
-
                     val count = arrayOfNulls<String>(poemsCount!!.size)
-
                     for (i in poemsCount.indices) {
                         count[i] = poemsCount[i].count.toString()
                     }
@@ -90,7 +86,6 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
-
 
         getCount()
 
